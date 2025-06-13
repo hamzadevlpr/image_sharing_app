@@ -1,0 +1,10 @@
+NEXT_PUBLIC_VERCEL_URl=http://localhost:3000
+CLOUDINARY_API_KEY=497691136233246
+CLOUDINARY_API_SECRET=I3T-1TzwKIRHVtnosPuZwcUNaZ8
+CLOUDINARY_CLOUD_NAME=djhwzccwh
+HOST=localhost
+DB_PORT=3306
+DBUSERNAME=your_mysql_user
+DBPASSWORD=your_mysql_password
+DATABASE=image_sharing_app
+JWT_SECRET=your_super_secret_key

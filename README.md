@@ -1,6 +1,4 @@
-Here you go — formatted properly as a Markdown file (`README.md`):
 
-```markdown
 # 📸 Image Sharing Web App
 
 An advanced image sharing platform built with **Next.js**, **MySQL**, and **TypeORM** that allows users to upload and share images publicly or privately. Users can manage their images, set privacy controls, and share links with others.
@@ -85,11 +83,11 @@ Create a `.env.local` file in the root directory and add the following variables
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # MySQL Database
-DB_HOST=localhost
+HOST=localhost
 DB_PORT=3306
-DB_USERNAME=your_mysql_user
-DB_PASSWORD=your_mysql_password
-DB_DATABASE=image_sharing_app
+DBUSERNAME=your_mysql_user
+DBPASSWORD=your_mysql_password
+DATABASE=image_sharing_app
 
 # JWT (If using JWT for authentication)
 JWT_SECRET=your_super_secret_key
@@ -99,8 +97,6 @@ CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-# Local Upload Path (Optional if storing locally)
-UPLOAD_PATH=./uploads
 ```
 
 ---
@@ -294,18 +290,3 @@ PRs are welcome. Please fork the repo and submit your pull requests.
 This project is open-sourced under the MIT License.
 
 ---
-
-```
-
----
-
-If you want, I can also:
-
-- generate a **`full project boilerplate`**
-- provide a **starter codebase** with the entities, API routes, and upload system set up.
-
-👉 Just say:  
-> **"Generate full project starter code"**  
-
-Shall I? 🚀
-```
