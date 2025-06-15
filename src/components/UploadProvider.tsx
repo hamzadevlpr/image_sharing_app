@@ -8,6 +8,8 @@ interface UploadFile {
 }
 
 interface UploadContextType {
+  step: number;
+  setStep: (step: number) => void;
   uploadFile: UploadFile | null;
   setUploadFile: (file: UploadFile | null) => void;
   metadata: {
@@ -26,6 +28,7 @@ interface UploadContextType {
   password: string;
   setPassword: (password: string) => void;
   setShareableLink: (link: string | null) => void;
+  resetUpload: () => void;
 }
 
 const UploadContext = createContext<UploadContextType | undefined>(undefined);
@@ -55,10 +58,19 @@ const UploadProvider: React.FC<UploadProviderProps> = ({ children }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [password, setPassword] = useState<string>("");
   const [shareableLink, setShareableLink] = useState<string | null>(null);
+  const [step, setStep] = useState(1);
 
+  const resetUpload = () => {
+    setUploadFile(null);
+    setShareableLink(null); // Reset shareableLink to null
+    setStep(1);
+  };
   return (
     <UploadContext.Provider
       value={{
+        step,
+        resetUpload,
+        setStep,
         uploadFile,
         password,
         setPassword,

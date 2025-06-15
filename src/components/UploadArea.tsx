@@ -10,11 +10,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 
 const UploadArea: React.FC = () => {
-  const { uploadFile, shareableLink } = useUpload();
-  const [step, setStep] = useState(1);
-
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const { uploadFile, shareableLink, step, setStep } = useUpload();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -74,7 +70,7 @@ const UploadArea: React.FC = () => {
             <div className="flex justify-between gap-4">
               {step > 1 && (
                 <Button
-                  onClick={prevStep}
+                  onClick={() => setStep(step - 1)}
                   variant="outline"
                   className="flex-1 "
                   size="lg"
@@ -85,7 +81,7 @@ const UploadArea: React.FC = () => {
               )}
               {step < 3 && (
                 <Button
-                  onClick={nextStep}
+                  onClick={() => setStep(step + 1)}
                   disabled={step === 1 && !uploadFile}
                   variant="outline"
                   size="lg"

@@ -5,12 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Copy, Check, ExternalLink } from "lucide-react";
 import { useUpload } from "@/components/UploadProvider";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const ShareableLink: React.FC = () => {
-  const { shareableLink } = useUpload();
+  const { shareableLink, setStep, resetUpload } = useUpload();
   const [copied, setCopied] = useState(false);
-  const router = useRouter();
 
   if (!shareableLink) return null;
 
@@ -75,9 +73,7 @@ const ShareableLink: React.FC = () => {
 
         <div className="flex gap-2 pt-2">
           <Button
-            onClick={() => {
-              router.push("/");
-            }}
+            onClick={resetUpload}
             variant="outline"
             className="flex-1"
           >

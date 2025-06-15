@@ -39,7 +39,7 @@ const UploadButton: React.FC = () => {
         },
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent.total || 1)
+            (progressEvent.loaded * 50) / (progressEvent.total || 1)
           );
           setUploadFile({
             ...uploadFile,
@@ -50,6 +50,10 @@ const UploadButton: React.FC = () => {
 
       const data = response.data;
 
+      setUploadFile({
+        ...uploadFile,
+        progress: 100,
+      });
       if (data.success) {
         setShareableLink(`${process.env.NEXT_PUBLIC_VERCEL_URl}${data.downloadLink}`);
         toast("Upload successful!", {

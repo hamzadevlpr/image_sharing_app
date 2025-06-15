@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Download, Lock, Eye, Calendar, HardDrive, Users } from "lucide-react";
 import Image from "next/image";
 import { humanSize } from "@/helper/HumanSize";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface FileMetadataResponse {
   success: boolean;
@@ -47,6 +48,7 @@ const DownloadPage: React.FC = () => {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [accessLoading, setAccessLoading] = useState(false);
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -68,6 +70,7 @@ const DownloadPage: React.FC = () => {
 
   const fetchFileData = async (enteredPassword?: string) => {
     try {
+      setAccessLoading(true);
       const res = await axios.get(
         `/api/cloud/file/${id}`,
         {
@@ -82,6 +85,8 @@ const DownloadPage: React.FC = () => {
       } else {
         toast.error("Failed to fetch file");
       }
+    } finally {
+      setAccessLoading(false);
     }
   };
 
@@ -92,6 +97,7 @@ const DownloadPage: React.FC = () => {
 
   const handleDownload = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(
         `/api/cloud/download/${id}`,
         {
@@ -108,6 +114,8 @@ const DownloadPage: React.FC = () => {
       link.remove();
     } catch (err) {
       toast.error("Failed to download file.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,20 +130,18 @@ const DownloadPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          {isPasswordVerified && (
-            <CardHeader className="pb-0">
-              <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl overflow-hidden mb-6 shadow-inner">
-                <Image
-                  src={imageUrl}
-                  alt="File preview"
-                  className="w-full h-full object-cover"
-                  width={640}
-                  height={360}
-                  onError={() => console.log("Image failed to load")}
-                />
-              </div>
-            </CardHeader>
-          )}
+          <CardHeader className="pb-0">
+            <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl overflow-hidden mb-6 shadow-inner">
+              <Image
+                src={imageUrl || '/placeholder.svg'}
+                alt="File preview"
+                className="w-full h-full object-cover"
+                width={640}
+                height={360}
+                onError={() => console.log("Image failed to load")}
+              />
+            </div>
+          </CardHeader>
           <CardContent className="space-y-6">
             <div className="text-center space-y-2">
               <h1 className="text-2xl font-semibold text-slate-800 break-all">
@@ -177,8 +183,20 @@ const DownloadPage: React.FC = () => {
                     type="submit"
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
                   >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Access File
+                    {
+                      accessLoading ? (
+                        <span className="flex items-center space-x-2">
+                          <ClipLoader
+                            size={20}
+                            color="#ffffff"
+                          />
+                        </span>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4 mr-2" />
+                          Access File
+                        </>
+                      )}
                   </Button>
                 </form>
               </div>
@@ -232,10 +250,23 @@ const DownloadPage: React.FC = () => {
 
                 <Button
                   onClick={handleDownload}
-                  className="w-full h-16 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
                 >
-                  <Download className="w-6 h-6 mr-3" />
-                  Download File
+                  {
+                    isLoading ? (
+                      <span className="flex items-center space-x-2">
+                        <ClipLoader
+                          size={20}
+                          color="#ffffff"
+                        />
+                      </span>
+                    ) : (
+                      <span className="flex items-center space-x-2">
+                        <Download className="w-5 h-5" />
+                        <span>Download File</span>
+                      </span>
+                    )
+                  }
                 </Button>
 
                 <div className="text-center text-sm text-slate-500 bg-slate-50 rounded-lg p-4">
