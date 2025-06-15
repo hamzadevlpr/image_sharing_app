@@ -3,7 +3,9 @@ import fs from "fs";
 import path from "path";
 import { DataSource } from "typeorm";
 
-const sslCert = fs.readFileSync(path.join(process.cwd(), "certs", "ca.pem"));
+const caPemBase64 = process.env.CA_PEM_BASE64 || "";
+
+const sslCert = Buffer.from(caPemBase64, 'base64').toString('utf-8');
 
 export const AppDataSource = new DataSource({
   type: "mysql",
