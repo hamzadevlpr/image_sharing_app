@@ -20,7 +20,7 @@ export async function DELETE(req: NextRequest) {
     for (const file of expiredFiles) {
       try {
         await deleteFromCloudinary(file.storedName);
-        await fileRepo.remove(file);
+        // await fileRepo.remove(file);
         deletedCount++;
       } catch (err) {
         console.error(`Failed to delete ${file.storedName} from Cloudinary`, err);
