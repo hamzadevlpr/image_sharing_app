@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Check } from "lucide-react";
+import { Upload, CheckCircle, Circle, Loader2 } from "lucide-react";
 import { useUpload } from "@/components/UploadProvider";
 import { toast } from "sonner";
 import axios from "axios";
@@ -32,7 +32,7 @@ const UploadButton: React.FC = () => {
       formData.append("isPublic", permission === "public" ? "true" : "false");
       formData.append("expiresIn", metadata.expiresIn?.toString() || "86400");
       formData.append("password", password || "");
-
+      console.log("Uploading file:", formData); 
       const response = await axios.post(`/api/cloud/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -55,7 +55,9 @@ const UploadButton: React.FC = () => {
         progress: 100,
       });
       if (data.success) {
-        setShareableLink(`${process.env.NEXT_PUBLIC_VERCEL_URl}${data.downloadLink}`);
+        setShareableLink(
+          `${process.env.NEXT_PUBLIC_VERCEL_URl}${data.downloadLink}`
+        );
         toast("Upload successful!", {
           description: "Your image has been uploaded and is ready to share.",
         });
@@ -76,59 +78,81 @@ const UploadButton: React.FC = () => {
       setIsUploading(false);
     }
   };
+  const borderProgress = uploadFile?.progress || 0;
   return (
-    <div className="bg-white rounded-xl p-6 border border-slate-200">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-slate-800">
-            Ready to Upload?
-          </h3>
-          {uploadFile && metadata.title.trim() && (
-            <Check className="w-5 h-5 text-green-500" />
-          )}
-        </div>
-
-        <div className="space-y-2 text-sm text-slate-600">
-          <div className="flex items-center justify-between">
-            <span>Image selected:</span>
-            <span className={uploadFile ? "text-green-600" : "text-slate-400"}>
-              {uploadFile ? "✓" : "○"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Title provided:</span>
-            <span
-              className={
-                metadata.title.trim() ? "text-green-600" : "text-slate-400"
-              }
-            >
-              {metadata.title.trim() ? "✓" : "○"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Permission set:</span>
-            <span className="text-green-600 capitalize">{permission}</span>
-          </div>
-        </div>
-
-        <Button
-          onClick={handleUpload}
-          disabled={!canUpload}
-          className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-slate-300 disabled:text-slate-500 rounded-lg py-3 text-base font-medium transition-all duration-200"
-        >
-          {isUploading ? (
-            <div className="flex items-center">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-              Uploading...
-            </div>
-          ) : (
-            <div className="flex items-center">
-              <Upload className="w-5 h-5 mr-2" />
-              Upload Now
-            </div>
-          )}
-        </Button>
+    <div
+      className="bg-white rounded-2xl p-6 border relative shadow-sm space-y-5"
+      style={{
+        borderWidth: "2px",
+        borderStyle: "solid",
+        borderImageSource: `conic-gradient(#3b82f6 ${borderProgress}%, #e2e8f0 ${borderProgress}%)`,
+        borderImageSlice: 1,
+      }}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-lg font-semibold text-slate-800">
+          Final Step: Upload Your Image
+        </h3>
+        {uploadFile && metadata.title.trim() && (
+          <CheckCircle className="w-5 h-5 text-green-500" />
+        )}
       </div>
+
+      <div className="space-y-3 text-sm text-slate-600">
+        <StatusRow label="Image selected" success={!!uploadFile} />
+        <StatusRow label="Title provided" success={!!metadata.title.trim()} />
+        <StatusRow
+          label="Permission set"
+          success={!!permission}
+          value={permission}
+        />
+      </div>
+
+      <Button
+        onClick={handleUpload}
+        disabled={!canUpload}
+        variant="primary"
+        className="w-full"
+      >
+        {isUploading ? (
+          <div className="flex items-center">
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            Uploading...
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <Upload className="w-5 h-5 mr-2" />
+            Upload Now
+          </div>
+        )}
+      </Button>
+    </div>
+  );
+};
+
+const StatusRow = ({
+  label,
+  success,
+  value,
+}: {
+  label: string;
+  success: boolean;
+  value?: string;
+}) => {
+  return (
+    <div className="flex items-center justify-between">
+      <span>{label}:</span>
+      {success ? (
+        <span className="flex items-center space-x-1 text-green-600">
+          <CheckCircle className="w-4 h-4" />
+          {value && <span className="capitalize">{value}</span>}
+        </span>
+      ) : (
+        <span className="flex items-center space-x-1 text-slate-400">
+          <Circle className="w-3 h-3" />
+          <span>Pending</span>
+        </span>
+      )}
     </div>
   );
 };

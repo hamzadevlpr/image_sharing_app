@@ -31,8 +31,8 @@ const UploadArea: React.FC = () => {
               key={s}
               className={`w-8 h-8 flex items-center justify-center rounded-full border ${
                 s === step
-                  ? "bg-blue-600 text-white"
-                  : "border-slate-300 text-slate-500"
+                  ? "bg-gradient-primary text-white"
+                  : "border-teal-600 text-teal-600 hover:bg-teal-50"
               }`}
             >
               {s}
@@ -44,7 +44,7 @@ const UploadArea: React.FC = () => {
       <div
         className={`grid ${
           shareableLink ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
-        } gap-8`}
+        } gap-8 items-stretch`}
       >
         {/* Left Column */}
         <div className="space-y-6">
@@ -83,9 +83,9 @@ const UploadArea: React.FC = () => {
                 <Button
                   onClick={() => setStep(step + 1)}
                   disabled={step === 1 && !uploadFile}
-                  variant="outline"
+                  variant="primary"
                   size="lg"
-                  className="bg-blue-600 !text-white hover:bg-blue-700 flex-1"
+                  className="flex-1"
                 >
                   <span>Next</span>
                   <ArrowRight className="inline-block" size={16} />

@@ -96,7 +96,7 @@ const FileDropzone: React.FC = () => {
           </h3>
           <p className="text-slate-500 mb-4">or click to browse files</p>
 
-          <label className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
+          <label className="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
             <Upload className="w-4 h-4 mr-2" />
             Choose File
             <input

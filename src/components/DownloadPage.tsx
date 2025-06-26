@@ -11,6 +11,7 @@ import { Download, Lock, Eye, Calendar, HardDrive, Users } from "lucide-react";
 import Image from "next/image";
 import { humanSize } from "@/helper/HumanSize";
 import ClipLoader from "react-spinners/ClipLoader";
+import { DownloadPageSkeleton } from "./Skeleton/DownloadPageSkeleton";
 
 interface FileMetadataResponse {
   success: boolean;
@@ -53,12 +54,9 @@ const DownloadPage: React.FC = () => {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const res = await axios.get(
-          `/api/cloud/file/${id}/metadata`
-        );
+        const res = await axios.get(`/api/cloud/file/${id}/metadata`);
         setMetadata(res.data.data);
         if (res.data.data.permission === "public") {
-          // directly fetch file data for public files
           fetchFileData();
         }
       } catch (err) {
@@ -71,12 +69,9 @@ const DownloadPage: React.FC = () => {
   const fetchFileData = async (enteredPassword?: string) => {
     try {
       setAccessLoading(true);
-      const res = await axios.get(
-        `/api/cloud/file/${id}`,
-        {
-          params: { password: enteredPassword },
-        }
-      );
+      const res = await axios.get(`/api/cloud/file/${id}`, {
+        params: { password: enteredPassword },
+      });
       setFileData(res.data);
       setIsPasswordVerified(true);
     } catch (err: any) {
@@ -98,13 +93,10 @@ const DownloadPage: React.FC = () => {
   const handleDownload = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get(
-        `/api/cloud/download/${id}`,
-        {
-          responseType: "blob",
-          params: { password: password || undefined },
-        }
-      );
+      const res = await axios.get(`/api/cloud/download/${id}`, {
+        responseType: "blob",
+        params: { password: password || undefined },
+      });
       const blobUrl = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = blobUrl;
@@ -119,21 +111,23 @@ const DownloadPage: React.FC = () => {
     }
   };
 
-  if (!metadata)
-    return <div className="text-center mt-20 text-lg">Loading...</div>;
+  if (!metadata) {
+    return <DownloadPageSkeleton />;
+  }
 
   const showPasswordPrompt =
     metadata.permission === "private" && !isPasswordVerified;
   const imageUrl = fileData?.url || "/placeholder.svg";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+    <div className="mt-20 bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Image Preview Card */}
+        <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm h-full flex flex-col">
           <CardHeader className="pb-0">
             <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl overflow-hidden mb-6 shadow-inner">
               <Image
-                src={imageUrl || '/placeholder.svg'}
+                src={imageUrl || "/placeholder.svg"}
                 alt="File preview"
                 className="w-full h-full object-cover"
                 width={640}
@@ -142,16 +136,21 @@ const DownloadPage: React.FC = () => {
               />
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="flex-1 flex flex-col justify-between">
             <div className="text-center space-y-2">
               <h1 className="text-2xl font-semibold text-slate-800 break-all">
                 {metadata.originalName}
               </h1>
               <p className="text-slate-500">Ready for download</p>
             </div>
+          </CardContent>
+        </Card>
 
+        {/* File Details Card */}
+        <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm h-full flex flex-col justify-between">
+          <CardContent className="space-y-6 flex-1 flex flex-col justify-between">
             {!isPasswordVerified && showPasswordPrompt ? (
-              <div className="space-y-6">
+              <div className="space-y-6 flex-1 flex flex-col justify-center">
                 <div className="text-center py-8">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Lock className="w-8 h-8 text-blue-600" />
@@ -183,111 +182,104 @@ const DownloadPage: React.FC = () => {
                     type="submit"
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
                   >
-                    {
-                      accessLoading ? (
-                        <span className="flex items-center space-x-2">
-                          <ClipLoader
-                            size={20}
-                            color="#ffffff"
-                          />
-                        </span>
-                      ) : (
-                        <>
-                          <Eye className="w-4 h-4 mr-2" />
-                          Access File
-                        </>
-                      )}
+                    {accessLoading ? (
+                      <span className="flex items-center space-x-2">
+                        <ClipLoader size={20} color="#ffffff" />
+                      </span>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Access File
+                      </>
+                    )}
                   </Button>
                 </form>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-6 flex-1 flex flex-col justify-between">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-50 rounded-xl p-4 flex items-center space-x-3">
-                    <HardDrive className="w-5 h-5 text-slate-500" />
-                    <div>
-                      <p className="text-sm text-slate-500">File Size</p>
-                      <p className="font-medium text-slate-800">
-                        {humanSize(fileData?.size || metadata.size)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-xl p-4 flex items-center space-x-3">
-                    <Users className="w-5 h-5 text-slate-500" />
-                    <div>
-                      <p className="text-sm text-slate-500">Downloads</p>
-                      <p className="font-medium text-slate-800">
-                        {fileData?.downloadCount || metadata.downloadCount}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-xl p-4 flex items-center space-x-3">
-                    <Calendar className="w-5 h-5 text-slate-500" />
-                    <div>
-                      <p className="text-sm text-slate-500">Uploaded</p>
-                      <p className="font-medium text-slate-800">
-                        {fileData?.createdAt
-                          ? new Date(fileData.createdAt).toLocaleString()
-                          : new Date(metadata.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-xl p-4 flex items-center space-x-3">
-                    <Calendar className="w-5 h-5 text-red-500" />
-                    <div>
-                      <p className="text-sm text-slate-500">Expires</p>
-                      <p className="font-medium text-slate-800">
-                        {fileData?.expiresAt
-                          ? new Date(fileData.expiresAt).toLocaleString()
-                          : new Date(metadata.expiresAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
+                  <InfoCard
+                    icon={<HardDrive className="w-5 h-5 text-slate-500" />}
+                    label="File Size"
+                    value={humanSize(fileData?.size || metadata.size)}
+                  />
+                  <InfoCard
+                    icon={<Users className="w-5 h-5 text-slate-500" />}
+                    label="Downloads"
+                    value={fileData?.downloadCount || metadata.downloadCount}
+                  />
+                  <InfoCard
+                    icon={<Calendar className="w-5 h-5 text-slate-500" />}
+                    label="Uploaded"
+                    value={new Date(
+                      fileData?.createdAt || metadata.createdAt
+                    ).toLocaleString()}
+                  />
+                  <InfoCard
+                    icon={<Calendar className="w-5 h-5 text-red-500" />}
+                    label="Expires"
+                    value={new Date(
+                      fileData?.expiresAt || metadata.expiresAt
+                    ).toLocaleString()}
+                  />
                 </div>
 
-                <Button
-                  onClick={handleDownload}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-                >
-                  {
-                    isLoading ? (
+                <div className="space-y-4">
+                  <Button
+                    onClick={handleDownload}
+                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+                  >
+                    {isLoading ? (
                       <span className="flex items-center space-x-2">
-                        <ClipLoader
-                          size={20}
-                          color="#ffffff"
-                        />
+                        <ClipLoader size={20} color="#ffffff" />
                       </span>
                     ) : (
                       <span className="flex items-center space-x-2">
                         <Download className="w-5 h-5" />
                         <span>Download File</span>
                       </span>
-                    )
-                  }
-                </Button>
+                    )}
+                  </Button>
 
-                <div className="text-center text-sm text-slate-500 bg-slate-50 rounded-lg p-4">
-                  <p>
-                    This download link will expire on{" "}
-                    {fileData?.expiresAt
-                      ? new Date(fileData.expiresAt).toLocaleString()
-                      : new Date(metadata.expiresAt).toLocaleString()}
-                  </p>
+                  <div className="text-center text-sm text-slate-500 bg-slate-50 rounded-lg p-4">
+                    <p>
+                      This download link will expire on{" "}
+                      {new Date(
+                        fileData?.expiresAt || metadata.expiresAt
+                      ).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
           </CardContent>
         </Card>
+      </div>
 
-        <div className="text-center mt-8 text-slate-500 text-sm">
-          <p>Powered by PixPort - Secure File Sharing</p>
-        </div>
+      <div className="text-center mt-8 text-slate-500 text-sm">
+        <p>Powered by PicShare - Secure File Sharing</p>
       </div>
     </div>
   );
 };
+const InfoCard = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+}) => (
+  <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl p-4 flex items-center space-x-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-lg">
+      {icon}
+    </div>
+    <div>
+      <p className="text-xs text-slate-500">{label}</p>
+      <p className="text-base font-medium text-slate-800">{value}</p>
+    </div>
+  </div>
+);
 
 export default DownloadPage;
