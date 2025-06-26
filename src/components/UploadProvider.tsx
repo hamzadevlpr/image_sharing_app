@@ -13,10 +13,11 @@ interface UploadContextType {
   uploadFile: UploadFile | null;
   setUploadFile: (file: UploadFile | null) => void;
   metadata: {
+    category: string | undefined;
     title: string;
     description: string;
     tags: string[];
-    expiresIn?: number; // in seconds
+    expiresIn?: number;
     password?: string;
   };
   setMetadata: (metadata: any) => void;
@@ -48,6 +49,7 @@ interface UploadProviderProps {
 const UploadProvider: React.FC<UploadProviderProps> = ({ children }) => {
   const [uploadFile, setUploadFile] = useState<UploadFile | null>(null);
   const [metadata, setMetadata] = useState({
+    category: undefined,
     title: "",
     description: "",
     tags: [],
