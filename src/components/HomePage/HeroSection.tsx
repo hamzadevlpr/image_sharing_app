@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import { useState } from "react";
+import VideoModal from "./VideoModal";
 
 const HeroSection = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
   return (
     <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 bg-gradient-hero overflow-hidden">
       {/* Background decoration */}
@@ -24,22 +28,23 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Start for free, share with anyone, control your privacy. 
+            Start for free, share with anyone, control your privacy.
             The modern way to organize and protect your memories.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               Get Started for Free
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 text-lg px-8 py-6 rounded-xl"
+              onClick={() => setIsVideoOpen(true)}
             >
               <Play className="w-5 h-5 mr-2" />
               Watch Demo
@@ -69,7 +74,7 @@ const HeroSection = () => {
         {/* Hero Image Placeholder */}
         <div className="max-w-5xl mx-auto mt-16 animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <div className="relative">
-            <img 
+            <img
               src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=1200&q=80"
               alt="Person using PicShare on laptop"
               className="w-full h-96 md:h-[500px] object-cover rounded-2xl shadow-2xl"
@@ -78,6 +83,13 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
+        videoId="dQw4w9WgXcQ" // Replace with your actual YouTube video ID
+      />
     </section>
   );
 };
