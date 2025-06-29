@@ -37,8 +37,8 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Help Center</a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Status</a></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/status" className="text-gray-400 hover:text-white transition-colors">Status</Link></li>
             </ul>
           </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 mb-4 md:mb-0">
-            © 2024 PicShare. All rights reserved.
+            © {new Date().getFullYear() -2 } - {new Date().getFullYear()} PicShare. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm">
             Made with ❤️ for photographers and creators worldwide
