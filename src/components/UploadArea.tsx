@@ -10,7 +10,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 
 const UploadArea: React.FC = () => {
-  const { uploadFile, shareableLink, step, setStep } = useUpload();
+  const { uploadFile, shareableLink, step, setStep, metadata, permission, password } = useUpload();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -29,11 +29,10 @@ const UploadArea: React.FC = () => {
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`w-8 h-8 flex items-center justify-center rounded-full border ${
-                s === step
-                  ? "bg-gradient-primary text-white"
-                  : "border-teal-600 text-teal-600 hover:bg-teal-50"
-              }`}
+              className={`w-8 h-8 flex items-center justify-center rounded-full border ${s === step
+                ? "bg-gradient-primary text-white"
+                : "border-teal-600 text-teal-600 hover:bg-teal-50"
+                }`}
             >
               {s}
             </div>
@@ -42,9 +41,8 @@ const UploadArea: React.FC = () => {
       </div>
 
       <div
-        className={`grid ${
-          shareableLink ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
-        } gap-8 items-stretch`}
+        className={`grid ${shareableLink ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+          } gap-8 items-stretch`}
       >
         {/* Left Column */}
         <div className="space-y-6">
@@ -82,7 +80,7 @@ const UploadArea: React.FC = () => {
               {step < 3 && (
                 <Button
                   onClick={() => setStep(step + 1)}
-                  disabled={step === 1 && !uploadFile}
+                  disabled={ !uploadFile || !metadata.title || (!password && permission === "private")}
                   variant="primary"
                   size="lg"
                   className="flex-1"

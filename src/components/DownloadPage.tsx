@@ -1,17 +1,17 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "next/navigation";
-import { toast } from "sonner";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Download, Lock, Eye, Calendar, HardDrive, Users } from "lucide-react";
-import Image from "next/image";
-import { humanSize } from "@/helper/HumanSize";
-import ClipLoader from "react-spinners/ClipLoader";
-import { DownloadPageSkeleton } from "./Skeleton/DownloadPageSkeleton";
+'use client';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Download, Lock, Eye, Calendar, HardDrive, Users, FileText, Clock, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { humanSize } from '@/helper/HumanSize';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { DownloadPageSkeleton } from './Skeleton/DownloadPageSkeleton';
 
 interface FileMetadataResponse {
   success: boolean;
@@ -40,16 +40,12 @@ interface FileDataResponse {
 
 const DownloadPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [metadata, setMetadata] = useState<FileMetadataResponse["data"] | null>(
-    null
-  );
-  const [fileData, setFileData] = useState<FileDataResponse["data"] | null>(
-    null
-  );
+  const [metadata, setMetadata] = useState<FileMetadataResponse['data'] | null>(null);
+  const [fileData, setFileData] = useState<FileDataResponse['data'] | null>(null);
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [accessLoading, setAccessLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -68,7 +64,6 @@ const DownloadPage: React.FC = () => {
 
   const fetchFileData = async (enteredPassword?: string) => {
     try {
-      setAccessLoading(true);
       const res = await axios.get(`/api/cloud/file/${id}`, {
         params: { password: enteredPassword },
       });
@@ -76,12 +71,10 @@ const DownloadPage: React.FC = () => {
       setIsPasswordVerified(true);
     } catch (err: any) {
       if (err.response?.status === 401) {
-        toast.error("Incorrect password");
+        toast.error('Incorrect password');
       } else {
-        toast.error("Failed to fetch file");
+        toast.error('Failed to fetch file');
       }
-    } finally {
-      setAccessLoading(false);
     }
   };
 
@@ -112,174 +105,217 @@ const DownloadPage: React.FC = () => {
   };
 
   if (!metadata) {
-    return <DownloadPageSkeleton />;
+    return "Loading...";
   }
 
-  const showPasswordPrompt =
-    metadata.permission === "private" && !isPasswordVerified;
-  const imageUrl = fileData?.url || "/placeholder.svg";
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const showPasswordPrompt = metadata.permission === 'private' && !isPasswordVerified;
+  const imageUrl = fileData?.url || '/placeholder.svg';
+
+  const isExpired = fileData?.expiresAt && new Date(fileData.expiresAt) < new Date();
 
   return (
-    <div className="mt-20 bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Image Preview Card */}
-        <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm h-full flex flex-col">
-          <CardHeader className="pb-0">
-            <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl overflow-hidden mb-6 shadow-inner">
-              <Image
-                src={imageUrl || "/placeholder.svg"}
-                alt="File preview"
-                className="w-full h-full object-cover"
-                width={640}
-                height={360}
-                onError={() => console.log("Image failed to load")}
-              />
-            </div>
-          </CardHeader>
-          <CardContent className="flex-1 flex flex-col justify-between">
-            <div className="text-center space-y-2">
-              <h1 className="text-2xl font-semibold text-slate-800 break-all">
-                {metadata.originalName}
-              </h1>
-              <p className="text-slate-500">Ready for download</p>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
 
-        {/* File Details Card */}
-        <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-sm h-full flex flex-col justify-between">
-          <CardContent className="space-y-6 flex-1 flex flex-col justify-between">
-            {!isPasswordVerified && showPasswordPrompt ? (
-              <div className="space-y-6 flex-1 flex flex-col justify-center">
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Lock className="w-8 h-8 text-blue-600" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* File Preview */}
+          <div className="space-y-6">
+            <Card className="bg-white border border-gray-100 shadow-sm rounded-2xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="aspect-square bg-gray-50 rounded-xl flex items-center justify-center mb-4">
+                  <div className="text-center">
+                    <Image
+                      src={imageUrl || "/placeholder.svg"}
+                      alt="File preview"
+                      className="w-full h-full object-cover"
+                      width={400}
+                      height={400}
+                      onError={() => console.log("Image failed to load")}
+                    />
                   </div>
-                  <h2 className="text-xl font-medium text-slate-700 mb-2">
-                    This file is password protected
-                  </h2>
-                  <p className="text-slate-500">
-                    Enter the password to access the file
-                  </p>
                 </div>
+                <h2 className="text-lg font-semibold text-gray-900 text-center truncate">
+                  {fileData?.originalName}
+                </h2>
+              </CardContent>
+            </Card>
 
-                <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-slate-700">
-                      Password
-                    </Label>
+            {/* File Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="bg-white border border-gray-100 shadow-sm rounded-xl">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Downloads</p>
+                      <p className="text-lg font-semibold text-gray-900">{fileData?.downloadCount}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border border-gray-100 shadow-sm rounded-xl">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <FileText className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Size</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatFileSize(fileData?.size || 0)}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* File Details & Actions */}
+          <div className="space-y-6">
+            {/* File Information */}
+            <Card className="bg-white border border-gray-100 shadow-sm rounded-2xl">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">File Details</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <span className="text-sm text-gray-600">Upload Date</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {fileData?.createdAt ? formatDate(new Date(fileData.createdAt)) : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <span className="text-sm text-gray-600">File Type</span>
+                    <span className="text-sm font-medium text-gray-900">{fileData?.storedName}</span>
+                  </div>
+                  {fileData?.expiresAt && (
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-sm text-gray-600">Expires</span>
+                      <span className={`text-sm font-medium ${isExpired ? 'text-red-600' : 'text-gray-900'}`}>
+                        {formatDate(new Date(fileData?.expiresAt))}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Password Protection */}
+            {showPasswordPrompt && !isPasswordVerified && (
+              <Card className="bg-white border border-gray-100 shadow-sm rounded-2xl">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <Shield className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Password Required</h3>
+                      <p className="text-sm text-gray-600">This file is password protected</p>
+                    </div>
+                  </div>
+                  <form onSubmit={handlePasswordSubmit} className="space-y-4">
                     <Input
-                      id="password"
                       type="password"
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 border-slate-200 focus:border-blue-400 focus:ring-blue-400/20"
-                      required
+                      className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
                     />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-                  >
-                    {accessLoading ? (
-                      <span className="flex items-center space-x-2">
-                        <ClipLoader size={20} color="#ffffff" />
-                      </span>
-                    ) : (
-                      <>
-                        <Eye className="w-4 h-4 mr-2" />
-                        Access File
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </div>
-            ) : (
-              <div className="space-y-6 flex-1 flex flex-col justify-between">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InfoCard
-                    icon={<HardDrive className="w-5 h-5 text-slate-500" />}
-                    label="File Size"
-                    value={humanSize(fileData?.size || metadata.size)}
-                  />
-                  <InfoCard
-                    icon={<Users className="w-5 h-5 text-slate-500" />}
-                    label="Downloads"
-                    value={fileData?.downloadCount || metadata.downloadCount}
-                  />
-                  <InfoCard
-                    icon={<Calendar className="w-5 h-5 text-slate-500" />}
-                    label="Uploaded"
-                    value={new Date(
-                      fileData?.createdAt || metadata.createdAt
-                    ).toLocaleString()}
-                  />
-                  <InfoCard
-                    icon={<Calendar className="w-5 h-5 text-red-500" />}
-                    label="Expires"
-                    value={new Date(
-                      fileData?.expiresAt || metadata.expiresAt
-                    ).toLocaleString()}
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <Button
-                    onClick={handleDownload}
-                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-                  >
-                    {isLoading ? (
-                      <span className="flex items-center space-x-2">
-                        <ClipLoader size={20} color="#ffffff" />
-                      </span>
-                    ) : (
-                      <span className="flex items-center space-x-2">
-                        <Download className="w-5 h-5" />
-                        <span>Download File</span>
-                      </span>
-                    )}
-                  </Button>
-
-                  <div className="text-center text-sm text-slate-500 bg-slate-50 rounded-lg p-4">
-                    <p>
-                      This download link will expire on{" "}
-                      {new Date(
-                        fileData?.expiresAt || metadata.expiresAt
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-medium py-3 rounded-lg transition-all duration-200"
+                    >
+                      Access File
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
             )}
-          </CardContent>
-        </Card>
-      </div>
 
-      <div className="text-center mt-8 text-slate-500 text-sm">
-        <p>Powered by PicShare - Secure File Sharing</p>
+            {/* Download Section */}
+            {(!showPasswordPrompt || isPasswordVerified) && !isExpired && (
+              <Card className="bg-white border border-gray-100 shadow-sm rounded-2xl">
+                <CardContent className="p-6">
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto">
+                      <Download className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Ready to Download</h3>
+                      <p className="text-sm text-gray-600">Click the button below to download your file</p>
+                    </div>
+                    <Button
+                      onClick={handleDownload}
+                      disabled={isDownloading}
+                      className="w-full bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-medium py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      {isDownloading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                          Preparing Download...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="h-4 w-4 mr-2" />
+                          Download File
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Expiration Notice */}
+            {isExpired && (
+              <Card className="bg-red-50 border border-red-200 shadow-sm rounded-2xl">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-red-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-red-900">File Expired</h3>
+                      <p className="text-sm text-red-700">This file has expired and is no longer available for download.</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+
+        {/* Footer Branding */}
+        <div className="text-center py-8 border-t border-gray-100">
+          <div className="flex items-center justify-center space-x-2 mb-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+              <FileText className="h-3 w-3 text-white" />
+            </div>
+            <span className="text-sm font-medium text-gray-900">PicShare</span>
+          </div>
+          <p className="text-xs text-gray-500">Secure file sharing made simple</p>
+        </div>
       </div>
     </div>
   );
 };
-const InfoCard = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-}) => (
-  <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl p-4 flex items-center space-x-4 shadow-sm hover:shadow-md transition-shadow">
-    <div className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-lg">
-      {icon}
-    </div>
-    <div>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="text-base font-medium text-slate-800">{value}</p>
-    </div>
-  </div>
-);
 
 export default DownloadPage;

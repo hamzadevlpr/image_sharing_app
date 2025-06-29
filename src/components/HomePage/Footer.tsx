@@ -48,7 +48,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link href="/cookie-policy" className="text-gray-400 hover:text-white transition-colors">Cookie Policy</Link></li>
+              <li><Link href="/cookies-policy" className="text-gray-400 hover:text-white transition-colors">Cookie Policy</Link></li>
               <li><Link href="/gdpr-compilance" className="text-gray-400 hover:text-white transition-colors">GDPR</Link></li>
             </ul>
           </div>
@@ -58,7 +58,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 mb-4 md:mb-0">
-            © {new Date().getFullYear() -2 } - {new Date().getFullYear()} PicShare. All rights reserved.
+            © 2024 PicShare. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm">
             Made with ❤️ for photographers and creators worldwide

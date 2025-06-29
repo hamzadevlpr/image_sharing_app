@@ -19,17 +19,6 @@ const ImagePreview: React.FC = () => {
 
   return (
     <div className="bg-white rounded-xl p-6 border border-slate-200 h-full flex flex-col justify-between">
-      {isUploading && (
-        <div className="space-y-2 mb-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-slate-600">Upload progress:</span>
-            <span className="text-slate-800 font-medium">
-              {uploadFile.progress}%
-            </span>
-          </div>
-          <Progress value={uploadFile.progress} className="h-2" />
-        </div>
-      )}
 
       {uploadFile.error && (
         <div className="mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -45,9 +34,9 @@ const ImagePreview: React.FC = () => {
           </h3>
           {!isUploading && (
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleRemove}
-              className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
+              className="!p-1 text-slate-400 hover:text-slate-600 transition-colors"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -86,7 +75,7 @@ const ImagePreview: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-t pt-4 space-y-2 text-sm text-slate-600 mt-4">
+      <div className="border-t pt-4 space-y-2 text-sm text-slate-600">
         <h4 className="font-medium text-slate-800">Image Info</h4>
         <div className="flex justify-between">
           <span>Type:</span>

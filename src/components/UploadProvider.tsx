@@ -29,6 +29,10 @@ interface UploadContextType {
   password: string;
   setPassword: (password: string) => void;
   setShareableLink: (link: string | null) => void;
+  allowedEmails: string[];
+  setAllowedEmails: (emails: string[]) => void;
+  allowLinkAccess: boolean;
+  setAllowLinkAccess: (allow: boolean) => void;
   resetUpload: () => void;
 }
 
@@ -60,22 +64,25 @@ const UploadProvider: React.FC<UploadProviderProps> = ({ children }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [password, setPassword] = useState<string>("");
   const [shareableLink, setShareableLink] = useState<string | null>(null);
+  const [allowedEmails, setAllowedEmails] = useState<string[]>([]);
+  const [allowLinkAccess, setAllowLinkAccess] = useState<boolean>(false);
   const [step, setStep] = useState(1);
 
   const resetUpload = () => {
     setUploadFile(null);
-    setShareableLink(null); // Reset shareableLink to null
+    setShareableLink(null);
+    setAllowedEmails([]);
+    setAllowLinkAccess(false);
+    setPassword("");
     setStep(1);
   };
+
   return (
     <UploadContext.Provider
       value={{
         step,
-        resetUpload,
         setStep,
         uploadFile,
-        password,
-        setPassword,
         setUploadFile,
         metadata,
         setMetadata,
@@ -85,6 +92,13 @@ const UploadProvider: React.FC<UploadProviderProps> = ({ children }) => {
         setIsUploading,
         shareableLink,
         setShareableLink,
+        password,
+        setPassword,
+        allowedEmails,
+        setAllowedEmails,
+        allowLinkAccess,
+        setAllowLinkAccess,
+        resetUpload,
       }}
     >
       {children}

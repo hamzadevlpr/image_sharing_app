@@ -19,6 +19,7 @@ import {
 import { X, Plus, Info } from "lucide-react";
 import { useUpload } from "@/components/UploadProvider";
 import { Button } from "@/components/ui/button";
+import TagManager from "./TagManager";
 
 const MetadataForm: React.FC = () => {
   const { metadata, setMetadata } = useUpload();
@@ -99,48 +100,45 @@ const MetadataForm: React.FC = () => {
           {/* Title Field */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Label
-                htmlFor="title"
-                className="text-sm font-medium text-slate-700"
-              >
-                Image Title *
+              <Label htmlFor="title" className="text-sm font-medium text-slate-700">
+                Image Title <span className="text-red-500">*</span>
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Info className="h-4 w-4 text-slate-400 cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  Give your image a descriptive title that captures its essence
+                  Give your image a descriptive title that captures its essence. Required for upload.
                 </TooltipContent>
               </Tooltip>
             </div>
             <Input
               id="title"
               value={metadata.title}
-              onChange={(e) => {
-                setMetadata({ ...metadata, title: e.target.value });
-                if (titleError && e.target.value.trim()) setTitleError("");
-              }}
+              onChange={(e) =>
+                setMetadata({ ...metadata, title: e.target.value })
+              }
               placeholder="e.g., Golden Hour at Mountain Peak"
-              maxLength={maxTitleLength}
-              className={`transition-all duration-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent ${
-                titleError
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-slate-300 hover:border-slate-400"
-              }`}
+              maxLength={100}
+              className={`transition-all duration-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent ${!metadata.title.trim() ? "border-red-500" : "border-slate-300 hover:border-slate-400"
+                }`}
             />
             <div className="flex justify-between items-center">
-              <span className="text-xs text-slate-500">
-                {titleError || "Give your image a memorable title"}
+              <span
+                className={`text-xs ${!metadata.title.trim() ? "text-red-500" : "text-slate-500"
+                  }`}
+              >
+                {metadata.title.trim()
+                  ? "Give your image a memorable title"
+                  : "Title is required"}
               </span>
               <span
-                className={`text-xs ${
-                  metadata.title.length > maxTitleLength * 0.9
+                className={`text-xs ${metadata.title.length > 90
                     ? "text-orange-500"
                     : "text-slate-400"
-                }`}
+                  }`}
               >
-                {metadata.title.length}/{maxTitleLength}
+                {metadata.title.length}/100
               </span>
             </div>
           </div>
@@ -221,11 +219,10 @@ const MetadataForm: React.FC = () => {
                 Optional - add context to your image
               </span>
               <span
-                className={`text-xs ${
-                  metadata.description.length > maxDescriptionLength * 0.9
-                    ? "text-orange-500"
-                    : "text-slate-400"
-                }`}
+                className={`text-xs ${metadata.description.length > maxDescriptionLength * 0.9
+                  ? "text-orange-500"
+                  : "text-slate-400"
+                  }`}
               >
                 {metadata.description.length}/{maxDescriptionLength}
               </span>
@@ -233,90 +230,10 @@ const MetadataForm: React.FC = () => {
           </div>
 
           {/* Tags Field */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Label
-                htmlFor="tags"
-                className="text-sm font-medium text-slate-700"
-              >
-                Tags
-              </Label>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Info className="h-4 w-4 text-slate-400 cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Add keywords to make your image easier to find</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-
-            <div className="flex gap-2">
-              <Input
-                id="tags"
-                placeholder="Type a tag and press Enter"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyPress={handleTagInputKeyPress}
-                disabled={metadata.tags.length >= maxTags}
-                className="flex-1 transition-all duration-200 border-slate-300 hover:border-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              />
-              <Button
-                type="button"
-                onClick={handleAddTag}
-                disabled={!tagInput.trim() || metadata.tags.length >= maxTags}
-                size="sm"
-                className="bg-teal-600 hover:bg-teal-700 text-white transition-colors duration-200"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {metadata.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {metadata.tags.map((tag, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 transition-colors duration-200 flex items-center gap-1 px-3 py-1"
-                  >
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(tag)}
-                      className="ml-1 hover:bg-teal-200 rounded-full p-0.5 transition-colors duration-200"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            {metadata.tags.length < maxTags && (
-              <div className="space-y-2">
-                <span className="text-xs text-slate-500">Suggested tags:</span>
-                <div className="flex flex-wrap gap-2">
-                  {sampleTags
-                    .filter((tag) => !metadata.tags.includes(tag))
-                    .slice(0, 5)
-                    .map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => addSampleTag(tag)}
-                        className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200 transition-colors duration-200 border border-slate-200"
-                      >
-                        + {tag}
-                      </button>
-                    ))}
-                </div>
-              </div>
-            )}
-            <span className="text-xs text-slate-500">
-              {metadata.tags.length}/{maxTags} tags added
-            </span>
-          </div>
+          <TagManager
+            tags={metadata.tags}
+            onChange={(tags) => setMetadata({ ...metadata, tags })}
+          />
         </div>
       </div>
     </TooltipProvider>

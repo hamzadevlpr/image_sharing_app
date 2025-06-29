@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Star, Quote } from "lucide-react";
@@ -64,7 +65,7 @@ const SocialProofSection = () => {
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
                         Loved by{" "}
-                        <span className="bg-gradient-to-r from-[#ef4444] to-[#f87171] bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-coral-500 to-coral-400 bg-clip-text text-transparent">
                             creators worldwide
                         </span>
                     </h2>

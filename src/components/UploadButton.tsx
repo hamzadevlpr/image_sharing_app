@@ -5,6 +5,10 @@ import { useUpload } from "@/components/UploadProvider";
 import { toast } from "sonner";
 import axios from "axios";
 
+interface responseType {
+  success: boolean;
+  downloadLink: string;
+}
 const UploadButton: React.FC = () => {
   const {
     uploadFile,
@@ -17,8 +21,13 @@ const UploadButton: React.FC = () => {
     password,
   } = useUpload();
 
-  const canUpload = uploadFile && metadata.title.trim() && !isUploading;
-
+  const canUpload =
+    uploadFile &&
+    metadata.title.trim() &&
+    !isUploading &&
+    permission &&
+    (permission !== "private" || password.trim());
+    
   const handleUpload = async () => {
     if (!uploadFile) return;
 
@@ -64,21 +73,21 @@ const UploadButton: React.FC = () => {
       } else {
         throw new Error("Upload failed on server.");
       }
-    } catch (error) {
+    } catch (error: any) {
       setUploadFile({
         ...uploadFile,
-        error: "Upload failed. Please try again.",
+        error: error?.response?.data?.message,
       });
 
       toast("Upload failed", {
-        description:
-          "There was an error uploading your image. Please try again.",
+        description: error?.response?.data?.message || "An error occurred during upload.",
       });
     } finally {
       setIsUploading(false);
     }
   };
   const borderProgress = uploadFile?.progress || 0;
+
   return (
     <div
       className="bg-white rounded-2xl p-6 border relative shadow-sm space-y-5"
