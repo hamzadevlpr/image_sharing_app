@@ -61,7 +61,7 @@
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "typeorm": "^0.3.24",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
