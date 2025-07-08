@@ -1,5 +1,5 @@
 'use client';
-import FeaturesSection from "@/components/FeaturesSection";
+import FeaturesSection from "@/components/Share/Image/FeaturesSection";
 import HeroSection from "@/components/HomePage/HeroSection";
 import HowItWorksSection from "@/components/HomePage/HowItWorksSection";
 import SocialProofSection from "@/components/HomePage/SocialProofSection";

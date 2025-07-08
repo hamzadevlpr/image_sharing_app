@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 interface FileUploadProgressProps {
   fileName: string;
   progress: number;
-  status: "uploading" | "completed" | "error";
+  status: 'uploading' | 'processing' | 'completed' | 'error';
   fileSize: string;
 }
 
@@ -19,13 +19,12 @@ const FileUploadProgress: React.FC<FileUploadProgressProps> = ({
     <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
       <div className="flex items-center space-x-3">
         <div
-          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            status === "completed"
+          className={`w-10 h-10 rounded-lg flex items-center justify-center ${status === "completed"
               ? "bg-green-100"
               : status === "error"
-              ? "bg-red-100"
-              : "bg-blue-100"
-          }`}
+                ? "bg-red-100"
+                : "bg-blue-100"
+            }`}
         >
           {status === "completed" ? (
             <Check className="h-5 w-5 text-green-600 animate-scale-in" />

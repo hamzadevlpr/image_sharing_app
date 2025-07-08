@@ -1,34 +1,41 @@
 "use client";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Copy, Check, ExternalLink, CheckCircle, Upload, Eye } from "lucide-react";
-import { useUpload } from "@/components/UploadProvider";
-import { toast } from "sonner";
-import { Card, CardContent } from "./ui/card";
 
-const ShareableLink: React.FC = () => {
-  const { shareableLink, setStep, resetUpload } = useUpload();
+import React, { useState } from 'react';
+import { CheckCircle, Copy, ExternalLink, Upload, Eye, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import {QRCodeCanvas} from 'qrcode.react';
+
+interface ShareableLinkProps {
+  shareableUrl: string;
+  onUploadAnother: () => void;
+  onViewImage: () => void;
+}
+
+const ShareableLink: React.FC<ShareableLinkProps> = ({
+  shareableUrl,
+  onUploadAnother,
+  onViewImage,
+}) => {
   const [copied, setCopied] = useState(false);
 
-  if (!shareableLink) return null;
-
-  const copyToClipboard = async () => {
+  const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(shareableLink);
-      toast("Link copied!", {
-        description: "The shareable link has been copied to your clipboard.",
-      });
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      toast("Copy failed", {
-        description: "Unable to copy link to clipboard.",
-      });
+      await navigator.clipboard.writeText(shareableUrl);
+      setCopied(true);
+
+      // Reset copied state after 2 seconds
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
     }
   };
 
-  const openLink = () => {
-    window.open(shareableLink, "_blank");
+  const handleOpenLink = () => {
+    window.open(shareableUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -56,13 +63,33 @@ const ShareableLink: React.FC = () => {
         {/* Shareable Link Section */}
         <div className="space-y-3">
           <label className="block text-sm font-medium text-gray-700">
+            Scan to Share
+          </label>
+          <div className="flex justify-center">
+            <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+              <QRCodeCanvas
+                value={shareableUrl}
+                size={160}
+                level="H"
+                includeMargin={true}
+                className="animate-fade-in"
+                aria-label="QR code for shareable link"
+              />
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 text-center">
+            Scan this QR code with your phone to access the image.
+          </p>
+        </div>
+        <div className="space-y-3">
+          <label className="block text-sm font-medium text-gray-700">
             Shareable Link
           </label>
           <div className="flex items-center space-x-2">
             <div className="flex-1 relative">
               <Input
                 type="text"
-                value={shareableLink}
+                value={shareableUrl}
                 readOnly
                 className="pr-4 py-3 bg-gray-50 border-gray-200 text-sm font-mono text-gray-700 focus:border-teal-500 focus:ring-teal-500 rounded-lg"
               />
@@ -70,7 +97,7 @@ const ShareableLink: React.FC = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={copyToClipboard}
+              onClick={handleCopyLink}
               className={`px-4 py-3 transition-all duration-200 ${copied
                 ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
                 : 'hover:bg-teal-50 hover:border-teal-200 border-gray-200'
@@ -91,7 +118,7 @@ const ShareableLink: React.FC = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={openLink}
+              onClick={handleOpenLink}
               className="px-4 py-3 hover:bg-blue-50 hover:border-blue-200 border-gray-200 transition-all duration-200"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
@@ -103,7 +130,7 @@ const ShareableLink: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100">
           <Button
-            onClick={resetUpload}
+            onClick={onUploadAnother}
             className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg"
           >
             <Upload className="h-4 w-4 mr-2" />
@@ -111,7 +138,7 @@ const ShareableLink: React.FC = () => {
           </Button>
           <Button
             variant="outline"
-            onClick={openLink}
+            onClick={onViewImage}
             className="flex-1 border-teal-600 text-teal-600 hover:bg-teal-50 py-3 rounded-lg font-medium transition-all duration-200"
           >
             <Eye className="h-4 w-4 mr-2" />
