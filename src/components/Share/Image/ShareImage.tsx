@@ -17,10 +17,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import CTA from './Share/Image/CTA';
-import HowToShareImage from './Share/Image/HowToShareImage';
-import FeatureCards from './Share/Image/FeatureCards';
 import axios from 'axios';
+import FeatureCards from './FeatureCards';
+import HowToShareImage from './HowToShareImage';
+import CTA from './CTA';
 
 const ImageShare = () => {
     // Updated type to include 'processing' status

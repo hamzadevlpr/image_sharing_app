@@ -8,9 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { BookOpen, CheckCircle, Clock, Copy, FileText, Globe, Link2, Lock, MessageSquare, QrCode, Share, Shield } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
-import CTA from './Share/Image/CTA';
-import ProTips from './Share/Text/ProTips';
+import CTA from '../Image/CTA';
+import ProTips from './ProTips';
 
 interface SharedText {
     id: string;
