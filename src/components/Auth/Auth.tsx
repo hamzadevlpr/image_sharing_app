@@ -37,14 +37,19 @@ const Auth = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(getSchema()),
   });
 
   useEffect(() => {
-    reset();
+    reset({
+      email: "",
+      password: "",
+      name: "",
+      confirmPassword: ""
+    });
   }, [authMode, reset]);
 
   const onSubmit = (data: any) => {
@@ -72,22 +77,20 @@ const Auth = () => {
               <Button
                 variant="tab"
                 onClick={() => setAuthMode("login")}
-                className={` ${
-                  authMode === "login"
-                    ? "bg-white text-teal-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={` ${authMode === "login"
+                  ? "bg-white text-teal-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 Sign In
               </Button>
               <Button
                 variant="tab"
                 onClick={() => setAuthMode("register")}
-                className={` ${
-                  authMode === "register"
-                    ? "bg-white text-teal-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={` ${authMode === "register"
+                  ? "bg-white text-teal-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 Sign Up
               </Button>
@@ -106,9 +109,8 @@ const Auth = () => {
                       type="text"
                       placeholder="Enter your full name"
                       {...register("name")}
-                      className={`pl-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${
-                        errors.name ? "border-red-500" : ""
-                      }`}
+                      className={`pl-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${errors.name ? "border-red-500" : ""
+                        }`}
                     />
                   </div>
                   {errors.name?.message && (
@@ -134,9 +136,8 @@ const Auth = () => {
                         ? "Enter your email to reset password"
                         : "Enter your email"
                     }
-                    className={`pl-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${
-                      errors.email ? "border-red-500" : ""
-                    }`}
+                    className={`pl-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${errors.email ? "border-red-500" : ""
+                      }`}
                   />
                 </div>
                 {errors.email?.message && (
@@ -194,9 +195,8 @@ const Auth = () => {
                           type={showConfirmPassword ? "text" : "password"}
                           {...register("confirmPassword")}
                           placeholder="Confirm your password"
-                          className={`pl-10 pr-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${
-                            errors.confirmPassword ? "border-red-500" : ""
-                          }`}
+                          className={`pl-10 pr-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${errors.confirmPassword ? "border-red-500" : ""
+                            }`}
                         />
                         <button
                           type="button"

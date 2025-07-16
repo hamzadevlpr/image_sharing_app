@@ -1,118 +1,115 @@
-import React, { useCallback, useState } from "react";
-import { Upload, Image } from "lucide-react";
-import { useUpload } from "@/components/UploadProvider";
-import { toast } from "sonner";
 
-const FileDropzone: React.FC = () => {
-  const { setUploadFile } = useUpload();
-  const [isDragging, setIsDragging] = useState(false);
+import React, { useState, useRef } from 'react';
+import { Upload, File, Image, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-  const validateFile = (file: File): string | null => {
-    if (!file.type.startsWith("image/")) {
-      toast("Invalid file type. Please upload an image.", {
-        description: "Supported formats: JPG, PNG, GIF, WebP",
-      });
-      return null;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast("File size exceeds 5MB limit.", {
-        description: "Please upload a smaller image.",
-      });
-      return null;
-    }
-    return null;
+interface FileDropzoneProps {
+  onFileDrop: (files: File[]) => void;
+}
+
+const FileDropzone: React.FC<FileDropzoneProps> = ({ onFileDrop }) => {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
   };
 
-  const handleFile = useCallback(
-    (file: File) => {
-      const error = validateFile(file);
-      if (error) {
-        console.error("File validation error:", error);
-        return;
-      }
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
 
-      const preview = URL.createObjectURL(file);
-      setUploadFile({
-        file,
-        preview,
-        progress: 0,
-        error: undefined,
-      });
-    },
-    [setUploadFile]
-  );
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      onFileDrop(files);
+    }
+  };
 
-      const files = Array.from(e.dataTransfer.files);
-      if (files.length > 0) {
-        handleFile(files[0]);
-      }
-    },
-    [handleFile]
-  );
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      onFileDrop(files);
+    }
+  };
 
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-      if (files && files.length > 0) {
-        handleFile(files[0]);
-      }
-    },
-    [handleFile]
-  );
+  const openFileDialog = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     <div
-      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
-        isDragging
-          ? "border-blue-400 bg-blue-50"
-          : "border-slate-300 bg-white hover:border-blue-300 hover:bg-slate-50"
-      }`}
+      className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 ${isDragOver
+          ? 'border-teal-400 bg-teal-50 scale-105'
+          : 'border-gray-300 bg-gray-50 hover:border-teal-300 hover:bg-teal-25'
+        }`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onDragOver={(e) => e.preventDefault()}
-      onDragEnter={() => setIsDragging(true)}
-      onDragLeave={() => setIsDragging(false)}
     >
-      <div className="flex flex-col items-center space-y-4">
-        <div
-          className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${
-            isDragging ? "bg-blue-100" : "bg-slate-100"
-          }`}
-        >
-          {isDragging ? (
-            <Image className="w-8 h-8 text-blue-500" />
-          ) : (
-            <Upload className="w-8 h-8 text-slate-500" />
-          )}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        onChange={handleFileSelect}
+        className="hidden"
+        accept="*/*"
+      />
+
+      <div className="space-y-4">
+        {/* Animated Upload Icon */}
+        <div className={`mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-teal-100 to-teal-100 flex items-center justify-center transition-transform duration-300 ${isDragOver ? 'scale-110 rotate-6' : 'hover:scale-105'
+          }`}>
+          <Upload className={`h-8 w-8 text-teal-600 transition-transform duration-500 ${isDragOver ? 'animate-bounce' : ''
+            }`} />
         </div>
 
         <div>
-          <h3 className="text-lg font-medium text-slate-800 mb-1">
-            {isDragging ? "Drop your image here" : "Drag & drop your image"}
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {isDragOver ? 'Drop your files here!' : 'Drag & drop your files'}
           </h3>
-          <p className="text-slate-500 mb-4">or click to browse files</p>
-
-          <label className="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
-            <Upload className="w-4 h-4 mr-2" />
-            Choose File
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-          </label>
+          <p className="text-gray-600 mb-4">
+            or <button onClick={openFileDialog} className="text-teal-600 hover:text-blue-700 font-medium underline">browse from your device</button>
+          </p>
         </div>
 
-        <div className="text-xs text-slate-400 space-y-1">
-          <p>Supported formats: JPG, PNG, GIF, WebP</p>
-          <p>Maximum file size: 5MB</p>
+        <div className="flex justify-center space-x-6 mb-4">
+          <div className="flex items-center space-x-2 text-gray-500">
+            <FileText className="h-5 w-5" />
+            <span className="text-sm">Documents</span>
+          </div>
+          <div className="flex items-center space-x-2 text-gray-500">
+            <Image className="h-5 w-5" />
+            <span className="text-sm">Images</span>
+          </div>
+          <div className="flex items-center space-x-2 text-gray-500">
+            <File className="h-5 w-5" />
+            <span className="text-sm">Any file</span>
+          </div>
         </div>
+
+        <Button
+          onClick={openFileDialog}
+          className="bg-teal-600 hover:bg-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          Choose Files
+        </Button>
+
+        <p className="text-xs text-gray-500 mt-4">
+          Maximum file size: 100MB • Supported formats: All file types
+        </p>
       </div>
+
+      {/* Subtle animation overlay */}
+      {isDragOver && (
+        <div className="absolute inset-0 bg-blue-100/50 rounded-2xl border-2 border-blue-400 animate-pulse"></div>
+      )}
     </div>
   );
 };
