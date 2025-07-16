@@ -13,7 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "../ui/label";
 import { forgotSchema, loginSchema, registerSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,19 +26,26 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
   const getSchema = () => {
     if (authMode === "login") return loginSchema;
     if (authMode === "register") return registerSchema;
     if (authMode === "forgot") return forgotSchema;
     return loginSchema;
   };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(getSchema()),
   });
+
+  useEffect(() => {
+    reset();
+  }, [authMode, reset]);
 
   const onSubmit = (data: any) => {
     console.log("Validated Data:", data);
@@ -153,7 +160,7 @@ const Auth = () => {
                         placeholder="Enter your password"
                         {...register("password")}
                         className={`pl-10 pr-10 h-12 bg-white/50 border-gray-200/50 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all ${
-                          errors.email ? "border-red-500" : ""
+                          errors.password ? "border-red-500" : ""
                         }`}
                       />
                       <button
