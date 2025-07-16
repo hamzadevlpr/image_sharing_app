@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState } from 'react';
-import { CheckCircle, Copy, ExternalLink, Upload, Eye, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import {QRCodeCanvas} from 'qrcode.react';
+import React, { useState } from "react";
+import {
+  CheckCircle,
+  Copy,
+  ExternalLink,
+  Upload,
+  Eye,
+  Check,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface ShareableLinkProps {
   shareableUrl: string;
@@ -30,12 +37,12 @@ const ShareableLink: React.FC<ShareableLinkProps> = ({
         setCopied(false);
       }, 2000);
     } catch (err) {
-      console.error('Failed to copy link:', err);
+      console.error("Failed to copy link:", err);
     }
   };
 
   const handleOpenLink = () => {
-    window.open(shareableUrl, '_blank', 'noopener,noreferrer');
+    window.open(shareableUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -66,16 +73,14 @@ const ShareableLink: React.FC<ShareableLinkProps> = ({
             Scan to Share
           </label>
           <div className="flex justify-center">
-            <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-              <QRCodeCanvas
-                value={shareableUrl}
-                size={160}
-                level="H"
-                includeMargin={true}
-                className="animate-fade-in"
-                aria-label="QR code for shareable link"
-              />
-            </div>
+            <QRCodeCanvas
+              value={shareableUrl}
+              size={160}
+              level="H"
+              includeMargin={true}
+              className="animate-fade-in"
+              aria-label="QR code for shareable link"
+            />
           </div>
           <p className="text-sm text-gray-500 text-center">
             Scan this QR code with your phone to access the image.
@@ -98,10 +103,11 @@ const ShareableLink: React.FC<ShareableLinkProps> = ({
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className={`px-4 py-3 transition-all duration-200 ${copied
-                ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
-                : 'hover:bg-teal-50 hover:border-teal-200 border-gray-200'
-                }`}
+              className={`px-4 py-3 transition-all duration-200 ${
+                copied
+                  ? "bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                  : "hover:bg-teal-50 hover:border-teal-200 border-gray-200"
+              }`}
             >
               {copied ? (
                 <>
