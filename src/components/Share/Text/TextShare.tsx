@@ -43,7 +43,7 @@ interface SharedText {
   shareUrl: string;
 }
 
-const TextShare: React.FC<SharedText> = () => {
+const TextShare = () => {
   const [textContent, setTextContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
