@@ -18,6 +18,7 @@ import {
   FileText,
   Globe,
   Link2,
+  Loader,
   Lock,
   MessageSquare,
   QrCode,
@@ -42,7 +43,7 @@ interface SharedText {
   shareUrl: string;
 }
 
-const TextShare = () => {
+const TextShare: React.FC<SharedText> = () => {
   const [textContent, setTextContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,9 +77,7 @@ const TextShare = () => {
         burnAfterReading,
       });
       const { slug } = res.data;
-      const url = `${
-        process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000"
-      }/share/text/view/${slug}`;
+      const url = `${process.env.NEXT_PUBLIC_VERCEL_URL}/share/text/view/${slug}`;
       setCurrentShareUrl(url);
       toast.success("Link created!");
     } catch (err: any) {
@@ -108,7 +107,7 @@ const TextShare = () => {
         break;
     }
   };
-
+  const hasActions = Boolean(currentShareUrl);
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -212,16 +211,26 @@ const TextShare = () => {
                     />
                   </div>
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4">
-                  <Button
-                    onClick={createShare}
-                    disabled={loading}
-                    className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all"
-                    aria-label="Create shareable link"
-                  >
-                    <Link2 className="h-4 w-4 mr-2" />
-                    Create Link
-                  </Button>
+                <div
+                  className={`grid gap-3 pt-4 ${
+                    hasActions ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1"
+                  }`}
+                >
+                  {!hasActions && (
+                    <Button
+                      onClick={createShare}
+                      disabled={loading}
+                      className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-white shadow-md hover:shadow-lg transition-all"
+                      aria-label="Create shareable link"
+                    >
+                      {loading ? (
+                        <Loader className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Link2 className="h-4 w-4 mr-2" />
+                      )}
+                      Create Link
+                    </Button>
+                  )}
 
                   {currentShareUrl && (
                     <>
