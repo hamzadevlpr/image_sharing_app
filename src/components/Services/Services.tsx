@@ -1,120 +1,19 @@
 'use client'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { additionalFeatures, mainServices } from '@/lib/CONSTANT';
 import {
     ArrowRight,
-    Clock,
-    Download,
-    Globe,
-    Link2,
-    Lock,
     MessageSquare,
-    QrCode,
     Share,
-    Upload,
-    Users
+    Upload
 } from 'lucide-react';
 import Link from 'next/link';
 
 const Services = () => {
-    const mainServices = [
-        {
-            id: 'file-sharing',
-            title: 'File Sharing',
-            description: 'Upload and share files of any size securely. Perfect for documents, images, videos, and more.',
-            icon: Upload,
-            features: ['Unlimited file size', 'End-to-end encryption', 'Password protection', 'Expiration dates'],
-            color: 'from-teal-500 to-teal-600',
-            href: '/share/image',
-            popular: true
-        },
-        {
-            id: 'text-sharing',
-            title: 'Text Sharing',
-            description: 'Share text snippets, notes, and messages instantly with advanced security options.',
-            icon: MessageSquare,
-            features: ['Quick sharing', 'Burn after reading', 'QR code generation', 'No registration needed'],
-            color: 'from-coral-400 to-coral-500',
-            href: '/share/text',
-            popular: false
-        },
-        {
-            id: 'qr-generator',
-            title: 'QR Code Generator',
-            description: 'Generate QR codes for any content, making mobile sharing incredibly easy.',
-            icon: QrCode,
-            features: ['Instant generation', 'High resolution', 'Mobile optimized', 'Scannable anywhere'],
-            color: 'from-purple-500 to-purple-600',
-            href: '/share/qr',
-            popular: false
-        }
-    ];
-
-    const additionalFeatures = [
-        {
-            title: 'Password Protection',
-            description: 'Secure your shared content with custom passwords',
-            icon: Lock,
-            color: 'text-red-600 bg-red-100'
-        },
-        {
-            title: 'Expiration Control',
-            description: 'Set automatic deletion dates for sensitive content',
-            icon: Clock,
-            color: 'text-orange-600 bg-orange-100'
-        },
-        {
-            title: 'Download Tracking',
-            description: 'Monitor who accessed your shared files',
-            icon: Download,
-            color: 'text-green-600 bg-green-100'
-        },
-        {
-            title: 'Link Customization',
-            description: 'Create memorable, branded sharing links',
-            icon: Link2,
-            color: 'text-blue-600 bg-blue-100'
-        },
-        {
-            title: 'Team Collaboration',
-            description: 'Share with multiple users and manage permissions',
-            icon: Users,
-            color: 'text-indigo-600 bg-indigo-100'
-        },
-        {
-            title: 'Global Access',
-            description: 'Share content worldwide with reliable delivery',
-            icon: Globe,
-            color: 'text-teal-600 bg-teal-100'
-        }
-    ];
 
     return (
         <div className="min-h-screen bg-gradient-hero">
-            {/* Header */}
-            <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <Link href="/" className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                                    <Share className="h-5 w-5 text-white" />
-                                </div>
-                                <div>
-                                    <h1 className="text-2xl font-bold text-gray-900">PicShare</h1>
-                                    <p className="text-sm text-gray-600">All Services</p>
-                                </div>
-                            </Link>
-                        </div>
-                        <Button asChild className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
-                            <Link href="/">
-                                <ArrowRight className="h-4 w-4 mr-2" />
-                                Back to Home
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Hero Section */}
@@ -132,7 +31,7 @@ const Services = () => {
                 </div>
 
                 {/* Main Services */}
-                <div className="mb-20">
+                <div className="mb-16">
                     <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Core Services</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         {mainServices.map((service) => {

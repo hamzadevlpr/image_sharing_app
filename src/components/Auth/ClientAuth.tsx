@@ -21,7 +21,7 @@ const ClientAuth = ({ children }: ClientAuthProps) => {
       ) : (
         <>
           <Header />
-          <main className="min-h-screen">{children}</main>
+           <main className="pt-16">{children}</main>
           <Footer />
         </>
       )}

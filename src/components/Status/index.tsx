@@ -94,7 +94,7 @@ const Status = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
                     {/* Status Banner */}
                     <div className="text-center mb-12">
-                        <div className={`inline-flex items-center gap-3 px-8 py-4 rounded-2xl shadow-lg mb-6 ${overallStatus === 'operational'
+                        <div className={`inline-flex items-center gap-3 px-8 py-4 rounded-2xl shadow-cus mb-6 ${overallStatus === 'operational'
                             ? 'bg-green-50 border-2 border-green-200'
                             : overallStatus === 'degraded'
                                 ? 'bg-orange-50 border-2 border-orange-200'
@@ -127,7 +127,7 @@ const Status = () => {
                     </div>
 
                     {/* System Components */}
-                    <Card className="mb-12 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+                    <Card className="mb-12 shadow-cus border-0 bg-white/80 backdrop-blur-sm">
                         <CardHeader className="pb-4">
                             <CardTitle className="text-2xl text-gray-800">System Status</CardTitle>
                             <p className="text-gray-600">Current status of all PicShare services</p>
@@ -156,7 +156,7 @@ const Status = () => {
                     </Card>
 
                     {/* Incident History */}
-                    <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+                    <Card className="shadow-cus border-0 bg-white/80 backdrop-blur-sm">
                         <CardHeader className="pb-4">
                             <CardTitle className="text-2xl text-gray-800">Recent Incidents</CardTitle>
                             <p className="text-gray-600">Latest updates and resolved issues</p>

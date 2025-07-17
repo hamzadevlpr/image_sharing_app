@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typeorm": "ts‑node --esm ./node_modules/typeorm/cli.js --dataSource data‑source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate src/migrations -n",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -62,7 +66,6 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
-    "typeorm": "^0.3.24",
     "zod": "^3.25.71"
   },
   "devDependencies": {
@@ -71,7 +74,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "typescript": "^5",
+    "ts-node": "^10.9.2",
+    "typeorm": "^0.3.25",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.0.1"
   }
 }

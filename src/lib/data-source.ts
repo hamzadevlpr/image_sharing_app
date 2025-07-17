@@ -1,6 +1,5 @@
 import { FileEntites } from "@/entities/File";
-import fs from "fs";
-import path from "path";
+import { SharedText } from "@/entities/SharedText";
 import { DataSource } from "typeorm";
 
 const caPemBase64 = process.env.CA_PEM_BASE64 || "";
@@ -14,7 +13,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DBUSERNAME,
   password: process.env.DBPASSWORD,
   database: process.env.DATABASE,
-  entities: [FileEntites],
+  entities: [FileEntites, SharedText],
   ssl: {
     ca: sslCert,
   },

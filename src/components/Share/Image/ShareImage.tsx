@@ -143,30 +143,6 @@ const ImageShare = () => {
 
     return (
         <div className="min-h-screen bg-gradient-hero">
-            {/* Header */}
-            <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <Link href="/" className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                                    <Share className="h-5 w-5 text-white" />
-                                </div>
-                                <div>
-                                    <h1 className="text-2xl font-bold text-gray-900">PicShare</h1>
-                                    <p className="text-sm text-gray-600">Image Sharing</p>
-                                </div>
-                            </Link>
-                        </div>
-                        <Button asChild className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
-                            <Link href="/">
-                                <ArrowRight className="h-4 w-4 mr-2" />
-                                Back to Home
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            </div>
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Hero Section */}
