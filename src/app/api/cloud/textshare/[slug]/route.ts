@@ -1,4 +1,3 @@
-// src/app/api/cloud/textshare/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import 'reflect-metadata';
@@ -7,9 +6,9 @@ import { SharedText } from '@/entities/SharedText';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = params;
+  const slug = params;
   const password = req.nextUrl.searchParams.get('password') ?? undefined;
 
   const ds = await initializeDatabase();
@@ -17,7 +16,7 @@ export async function GET(
 
   try {
   // 1) Find the share
-  const share = await repo.findOneBy({ slug });
+  const share = await repo.findOneBy(await slug);
   if (!share) {
     return new NextResponse(
       JSON.stringify({ error: 'Not found' }),

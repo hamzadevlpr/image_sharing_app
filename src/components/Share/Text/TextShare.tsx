@@ -477,8 +477,8 @@ const TextShare = () => {
                 <p className="text-sm text-gray-600">
                   Scan this QR code with any device to access your shared text
                 </p>
-                <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-3">
-                  <code className="text-xs text-gray-700 flex-1 truncate">
+                <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-3 w-full max-w-xs overflow-hidden">
+                  <code className="text-xs text-gray-700 flex-1 break-all">
                     {currentShareUrl || "No link generated"}
                   </code>
                   <Button
