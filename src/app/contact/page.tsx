@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Contact Us | Get Support from PicShare",
         description: "Reach out to our friendly PicShare support team. We're here to help with any questions or issues you may have.",
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/contact`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/contact`,
         siteName: "PicShare",
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/contact.png`,
+                url: `${process.env.NEXT_PUBLIC_HOST_URL}/og-images/contact.png`,
                 width: 1200,
                 height: 630,
                 alt: "PicShare Support Team",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Contact Us | Get Support from PicShare",
         description: "Have questions or need support? Contact PicShare for prompt assistance.",
-        images: [`${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/contact.png`],
+        images: [`${process.env.NEXT_PUBLIC_HOST_URL}/og-images/contact.png`],
     },
 };
 

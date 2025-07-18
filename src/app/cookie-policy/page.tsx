@@ -26,12 +26,12 @@ export const metadata: Metadata = {
         title: "Cookie Policy | PicShare",
         description:
             "We use cookies to ensure you have the best experience on PicShare. Discover how they work and how to control them.",
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/cookie-policy`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/cookie-policy`,
         siteName: "PicShare",
         type: "website",
         images: [
             {
-                url:`${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/cookie-policy.png`,
+                url:`${process.env.NEXT_PUBLIC_HOST_URL}/og-images/cookie-policy.png`,
                 width: 1200,
                 height: 630,
                 alt: "PicShare Cookie Policy",

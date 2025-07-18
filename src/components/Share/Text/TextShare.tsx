@@ -77,7 +77,7 @@ const TextShare = () => {
         burnAfterReading,
       });
       const { slug } = res.data;
-      const url = `${process.env.NEXT_PUBLIC_VERCEL_URL}/share/text/view/${slug}`;
+      const url = `${process.env.NEXT_PUBLIC_HOST_URL}/share/text/view/${slug}`;
       setCurrentShareUrl(url);
       toast.success("Link created!");
     } catch (err: any) {

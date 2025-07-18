@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     title: "Login | PicShare - Secure File Sharing",
     description:
       "Access your PicShare account to securely share and manage your files. Simple, fast, and protected file sharing made easy.",
-    url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/login`,
+    url: `${process.env.NEXT_PUBLIC_HOST_URL}/login`,
     siteName: "PicShare",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/og-image.png`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "PicShare - Secure File Sharing",

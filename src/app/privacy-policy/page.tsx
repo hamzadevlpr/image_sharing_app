@@ -25,12 +25,12 @@ export const metadata: Metadata = {
         title: "Privacy Policy | PicShare",
         description:
             "Your privacy matters. Discover how PicShare safeguards your personal data with strict security, encryption, and transparency.",
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/privacy-policy`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/privacy-policy`,
         siteName: "PicShare",
         type: "website",
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/privacy-policy.png`,
+                url: `${process.env.NEXT_PUBLIC_HOST_URL}/og-images/privacy-policy.png`,
                 width: 1200,
                 height: 630,
                 alt: "PicShare Privacy Policy",

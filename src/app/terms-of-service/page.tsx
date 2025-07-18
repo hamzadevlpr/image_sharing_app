@@ -24,12 +24,12 @@ export const metadata = {
         title: "Terms of Service | PicShare",
         description:
             "By using PicShare, you agree to our Terms of Service. Learn about acceptable use, prohibited content, account responsibilities, and more.",
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/terms-of-service`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/terms-of-service`,
         siteName: "PicShare",
         type: "website",
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/terms-of-service.png`,
+                url: `${process.env.NEXT_PUBLIC_HOST_URL}/og-images/terms-of-service.png`,
                 width: 1200,
                 height: 630,
                 alt: "PicShare Terms of Service",

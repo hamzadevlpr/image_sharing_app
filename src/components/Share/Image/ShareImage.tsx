@@ -95,7 +95,7 @@ const ImageShare = () => {
                     const shareableUrl = response.data.downloadLink;
 
                     if (!firstUrlSet) {
-                        setShareableUrl(`${process.env.NEXT_PUBLIC_VERCEL_URl}${shareableUrl}`);
+                        setShareableUrl(`${process.env.NEXT_PUBLIC_HOST_URL}${shareableUrl}`);
                         firstUrlSet = true;
                     }
 

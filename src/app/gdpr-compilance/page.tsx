@@ -26,12 +26,12 @@ export const metadata: Metadata = {
         title: "GDPR Compliance | PicShare",
         description:
             "Your privacy matters. See how PicShare complies with GDPR to protect your personal data and ensure transparency.",
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/gdpr`,
+        url: `${process.env.NEXT_PUBLIC_HOST_URL}/gdpr`,
         siteName: "PicShare",
         type: "website",
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_VERCEL_URl}/og-images/gdpr.png`,
+                url: `${process.env.NEXT_PUBLIC_HOST_URL}/og-images/gdpr.png`,
                 width: 1200,
                 height: 630,
                 alt: "PicShare GDPR Compliance",

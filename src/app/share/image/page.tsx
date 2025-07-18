@@ -14,19 +14,19 @@ export const metadata: Metadata = {
         'instant Image links',
     ],
     alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
+        canonical: `${process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:3000'
             }/share/Image`,
     },
     openGraph: {
         title: 'Share Image Everywhere - PicShare',
         description:
             'Easily share Image with shareable links using PicShare. Share everywhere with confidence, securely and instantly.',
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
+        url: `${process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:3000'
             }/share/Image`,
         siteName: 'PicShare',
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
+                url: `${process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:3000'
                     }/og-Image-sharing.png`,
                 width: 1200,
                 height: 630,
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         description:
             'Use PicShare to share Image instantly with secure links. Share everywhere with ease!',
         images: [
-            `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'
+            `${process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:3000'
             }/og-Image-sharing.png`,
         ],
     },

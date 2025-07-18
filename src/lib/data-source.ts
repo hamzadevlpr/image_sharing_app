@@ -17,6 +17,6 @@ export const AppDataSource = new DataSource({
   ssl: {
     ca: sslCert,
   },
-  synchronize: true,
+  synchronize: false,
   logging: true,
 });
