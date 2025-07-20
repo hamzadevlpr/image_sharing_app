@@ -4,41 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { faqs } from "@/lib/CONSTANT";
 
 const FAQSection = () => {
-  const faqs = [
-    {
-      question: "Is PicShare really free forever?",
-      answer:
-        "Yes! We believe everyone deserves a safe place for their memories. Our free plan includes unlimited uploads, storage, and sharing features. As we grow, we'll introduce optional premium features for power users, but the core experience will always remain free.",
-    },
-    {
-      question: "How secure are my photos on PicShare?",
-      answer:
-        "Your privacy is our top priority. All photos are encrypted during upload and storage. We use bank-level security protocols, and you have complete control over who can see your images. We never sell your data or use your photos for advertising.",
-    },
-    {
-      question:
-        "Can I share my photos with people who don't have PicShare accounts?",
-      answer:
-        "Absolutely! You can create shareable links that work for anyone, even without an account. You control the privacy settings - make albums public, private, or password-protected. Recipients can view and download photos directly from their browser.",
-    },
-    {
-      question: "What file formats and sizes are supported?",
-      answer:
-        "We support all major image formats including JPEG, PNG, GIF, HEIC, and RAW files from most cameras. There's no limit on file size or resolution - upload your photos in their original quality and we'll handle the rest.",
-    },
-    {
-      question: "How do I organize my photos into albums?",
-      answer:
-        "Creating albums is super simple! Just drag and drop photos into new or existing albums. You can organize by date, event, people, or any way that makes sense to you. Use tags and smart search to find photos instantly, even in large collections.",
-    },
-    {
-      question: "Can I access my photos from mobile devices?",
-      answer:
-        "Yes! PicShare works seamlessly across all your devices. Access your photos from any smartphone, tablet, or computer through our responsive web app. Your photos sync instantly, so you'll always have access to your memories wherever you are.",
-    },
-  ];
 
   return (
     <section className="py-24 bg-white">

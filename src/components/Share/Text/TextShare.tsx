@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   BookOpen,
+  Check,
   Clock,
   Copy,
   FileText,
@@ -32,6 +33,8 @@ import ProTips from "./ProTips";
 import axios from "axios";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
+import ExportOptions from "./ExportOptions";
+import QRModal from "./QRModal";
 
 interface SharedText {
   id: string;
@@ -136,9 +139,8 @@ const TextShare = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-gray-900">
                   <MessageSquare
-                    className={`h-5 w-5 ${
-                      isTyping ? "text-teal-600" : "text-gray-400"
-                    }`}
+                    className={`h-5 w-5 ${isTyping ? "text-teal-600" : "text-gray-400"
+                      }`}
                   />
                   Share Your Text
                 </CardTitle>
@@ -212,9 +214,8 @@ const TextShare = () => {
                   </div>
                 )}
                 <div
-                  className={`grid gap-3 pt-4 ${
-                    hasActions ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1"
-                  }`}
+                  className={`grid gap-3 pt-4 ${hasActions ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1"
+                    }`}
                 >
                   {!hasActions && (
                     <Button
@@ -270,85 +271,36 @@ const TextShare = () => {
                   )}
                 </div>
 
-                {currentShareUrl && (
-                  <div className="mt-4 p-2 bg-gray-50 rounded-lg flex items-center gap-2">
-                    <code className="text-xs text-gray-700 flex-1 truncate">
-                      {currentShareUrl}
-                    </code>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        navigator.clipboard.writeText(currentShareUrl);
-                        // Note: Add toast like "URL copied"
-                      }}
-                    >
-                      <Copy className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </div>
 
-          <div className="space-y-6">
-            <Card className="border-gray-200 shadow-cus bg-gradient-to-br from-teal-50 to-coral-50">
+          <div className="flex flex-col space-y-6 h-[550px]">
+            <Card className="border border-gray-200 shadow-md bg-gradient-to-br from-teal-50 to-orange-50 hover:shadow-lg transition">
               <CardContent className="p-6">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MessageSquare className="h-5 w-5 text-teal-600" />
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                    <MessageSquare className="h-6 w-6 text-teal-600" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
                       Pro Tips
                     </h3>
-                    <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• Use "Delete after reading" for sensitive info</li>
-                      <li>• Password protect confidential content</li>
-                      <li>• Share QR codes for easy mobile access</li>
+                    <ul className="text-sm text-gray-800 space-y-2 leading-relaxed">
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">✅</span>
+                        <span>Use <strong>"Delete after reading"</strong> for sensitive info</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-500 mt-0.5">🔒</span>
+                        <span>Password protect confidential content</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">📱</span>
+                        <span>Share QR codes for easy mobile access</span>
+                      </li>
                     </ul>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-gray-200 shadow-cus">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <FileText className="h-5 w-5" />
-                  Export Options
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-200 hover:bg-teal-50 justify-start"
-                    onClick={() => {
-                      const blob = new Blob([textContent], {
-                        type: "text/plain",
-                      });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = url;
-                      a.download = "shared-text.txt";
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Save as TXT
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-200 hover:bg-teal-50 justify-start"
-                    disabled // Placeholder: PDF export requires additional setup
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Export PDF
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -453,62 +405,11 @@ const TextShare = () => {
           }}
         />
 
-        <Dialog
+        <QRModal
           open={showQRModal}
-          onOpenChange={(open) => {
-            setShowQRModal(open);
-            if (!open) setCurrentShareUrl(""); // Reset URL when closing modal
-          }}
-        >
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-center justify-center">
-                <QrCode className="h-5 w-5 text-teal-600" />
-                Share via QR Code
-              </DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col items-center space-y-6 py-6">
-              <div className="bg-white p-6 rounded-2xl shadow-cus border-2 border-teal-100">
-                {currentShareUrl ? (
-                  <QRCodeSVG
-                    value={currentShareUrl}
-                    size={192}
-                    level="H"
-                    includeMargin={true}
-                    aria-label="QR code for shared text link"
-                  />
-                ) : (
-                  <p className="text-gray-500">Generating QR code...</p>
-                )}
-              </div>
-
-              <div className="text-center space-y-3">
-                <p className="text-sm text-gray-600">
-                  Scan this QR code with any device to access your shared text
-                </p>
-                <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-3 w-full max-w-xs overflow-hidden">
-                  <code className="text-xs text-gray-700 flex-1 break-all">
-                    {currentShareUrl || "No link generated"}
-                  </code>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      if (currentShareUrl) {
-                        navigator.clipboard.writeText(currentShareUrl);
-                        // Note: Add toast like "URL copied"
-                      }
-                    }}
-                    disabled={!currentShareUrl}
-                    aria-label="Copy QR code link"
-                  >
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+          url={currentShareUrl}
+          onClose={() => setShowQRModal(false)}
+        />
       </div>
     </div>
   );

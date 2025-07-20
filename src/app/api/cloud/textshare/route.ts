@@ -1,50 +1,51 @@
+// app/api/share/route.ts
 import { SharedText } from '@/entities/SharedText';
 import { initializeDatabase } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 
 export async function POST(req: NextRequest) {
-  const dataSource = await initializeDatabase();
-  const textRepo = dataSource.getRepository(SharedText);
+  const ds = await initializeDatabase();
+  const repo = ds.getRepository(SharedText);
 
   try {
-   const { content, password, burnAfterReading } = await req.json();
+    const { content, password, burnAfterReading, slug } = await req.json();
 
     if (!content) {
-        return new Response(JSON.stringify({ error: 'Content is required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-        });
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
-    const hashedPassword = password
-        ? await bcrypt.hash(password, 10)
-        : null;
-console.log("Hashed Password:", hashedPassword);
-    const newText = textRepo.create({
-        content,    
+
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+
+    let record = slug ? await repo.findOne({ where: { slug } }) : null;
+
+    if (record) {
+      // Update existing
+      record.content = content;
+      record.passwordHash = hashedPassword || null;
+      record.isPasswordProtected = !!hashedPassword;
+      record.burnAfterReading = !!burnAfterReading;
+    } else {
+      // Create new
+      record = repo.create({
+        content,
         passwordHash: hashedPassword || null,
-        burnAfterReading: burnAfterReading || false,
+        isPasswordProtected: !!hashedPassword,
+        burnAfterReading: !!burnAfterReading,
+      });
+    }
+
+    await repo.save(record);
+
+    return NextResponse.json({
+      success: true,
+      message: record.slug === slug ? 'Text updated successfully' : 'Text shared successfully',
+      slug: record.slug,
+      createdAt: record.createdAt,
+      isPasswordProtected: !!hashedPassword,
     });
-
-    await textRepo.save(newText);
-
-     return NextResponse.json(
-    {
-            message: 'Text shared successfully',
-            id: newText.id,
-            slug: newText.slug,
-            createdAt: newText.createdAt,
-            isPasswordProtected: !!hashedPassword,
-            success: true,
-      },
-      { status: 200 }
-    );
-    
   } catch (err) {
-    console.error("Error uploading text:", err);
-    return NextResponse.json(
-      { error: "Internal server error", success: false },
-      { status: 500 }
-    );
+    console.error('Error sharing text:', err);
+    return NextResponse.json({ error: 'Internal server error', success: false }, { status: 500 });
   }
 }
