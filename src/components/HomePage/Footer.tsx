@@ -49,7 +49,7 @@ const Footer = () => {
               <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link></li>
               <li><Link href="/cookies-policy" className="text-gray-400 hover:text-white transition-colors">Cookie Policy</Link></li>
-              <li><Link href="/gdpr-compilance" className="text-gray-400 hover:text-white transition-colors">GDPR</Link></li>
+              <li><Link href="/gdpr-compliance" className="text-gray-400 hover:text-white transition-colors">GDPR</Link></li>
             </ul>
           </div>
         </div>

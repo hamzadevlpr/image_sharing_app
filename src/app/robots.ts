@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://image-sharing-app-theta.vercel.app/sitemap.xml',
+    sitemap: `${process.env.NEXT_PUBLIC_HOST_URL}/sitemap.xml`,
   };
 }
