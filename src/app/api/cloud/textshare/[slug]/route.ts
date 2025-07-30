@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import 'reflect-metadata';
 import { initializeDatabase } from '@/lib/db';
 import { SharedText } from '@/entities/SharedText';
 
@@ -15,52 +14,69 @@ export async function GET(
   const repo = ds.getRepository(SharedText);
 
   try {
-  // 1) Find the share
-  const share = await repo.findOneBy(await slug);
-  if (!share) {
-    return new NextResponse(
-      JSON.stringify({ error: 'Not found' }),
-      { status: 404, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+    const share = await repo.findOne({ where: await slug });
 
-  // 2) If protected, verify
-  if (share.isPasswordProtected) {
-    if (!password) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Password required' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
+    if (!share) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    const ok = await bcrypt.compare(password, share.passwordHash!);
-    if (!ok) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Invalid password' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
+
+    if (share.isPasswordProtected) {
+      if (!password) {
+        return NextResponse.json({ error: 'Password required' }, { status: 401 });
+      }
+      const match = await bcrypt.compare(password, share.passwordHash!);
+      if (!match) {
+        return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+      }
     }
-  }
 
-  // 3) Handle burn‐after‐reading vs. increment
-  if (share.burnAfterReading) {
-    await repo.remove(share);
-  } else {
-    share.shareCount = (share.shareCount ?? 0) + 1;
-    await repo.save(share);
-  }
+    if (share.burnAfterReading) {
+      await repo.remove(share);
+    } else {
+      share.shareCount += 1;
+      await repo.save(share);
+    }
 
-  // 4) Return the content
-  return NextResponse.json(
-    share,
-      { status: 200 }
-    );
-    
-} catch (err) {
-    console.error("Error uploading text:", err);
-    return NextResponse.json(
-      { error: "Internal server error", success: false },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      content: share.content,
+      isPasswordProtected: share.isPasswordProtected,
+      burnAfterReading: share.burnAfterReading,
+      createdAt: share.createdAt,
+    });
+  } catch (err) {
+    console.error('Error fetching text:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  try {
+    const slug = params;
+    const { content } = await req.json();
+
+    if (!content) {
+      return NextResponse.json({ error: 'Missing content' }, { status: 400 });
+    }
+
+    const ds = await initializeDatabase();
+    const repo = ds.getRepository(SharedText);
+
+    const existing = await repo.findOne({ where: await slug });
+
+    if (!existing) {
+      return NextResponse.json({ error: 'Text not found' }, { status: 404 });
+    }
+
+    existing.content = content;
+    await repo.save(existing);
+
+    return NextResponse.json({ message: 'Text updated successfully' });
+  } catch (error) {
+    console.error('Update error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
