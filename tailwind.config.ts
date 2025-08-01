@@ -1,3 +1,4 @@
+import { ThemeProvider } from "next-themes";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -16,6 +17,23 @@ const config: Config = {
             },
         },
         extend: {
+            typography: (theme) => ({
+                DEFAULT: {
+                    css: {
+                        a: {
+                            textDecoration: "none",
+                            color: theme.colors.cyan[500],
+                            "&:hover": {
+                                textDecoration: "underline",
+                            },
+                        },
+                        code: {
+                            color: "var(--primary-foreground)",
+                            backgroundColor: "var(--muted)",
+                        },
+                    },
+                },
+            }),
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
@@ -116,7 +134,10 @@ const config: Config = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [
+        require("tailwindcss-animate"),
+        require("@tailwindcss/typography")
+    ],
 };
 
 export default config;

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -20,25 +20,33 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a
+            <Link
               href="#features"
               className="text-gray-600 hover:text-teal-600 transition-colors"
             >
               Features
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/blogs"
+              className="text-gray-600 hover:text-teal-600 transition-colors"
+            >
+              Blogs
+            </Link>
+            <Link
               href="#how-it-works"
               className="text-gray-600 hover:text-teal-600 transition-colors"
             >
               How It Works
-            </a>
-            <a
+            </Link>
+            <Link
               href="#pricing"
               className="text-gray-600 hover:text-teal-600 transition-colors"
             >
               Pricing
-            </a>
-            <Button variant="outline" href="/auth" className="text-sm">Sign In</Button>
+            </Link>
+            {/* <Button variant="outline" href="/auth" className="text-sm">
+              Sign In
+            </Button> */}
             <Button className="bg-gradient-primary hover:from-teal-600 hover:to-teal-700">
               Get Started Free
             </Button>
@@ -64,24 +72,24 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-100 py-4 space-y-4 animate-fade-in">
-            <a
+            <Link
               href="#features"
               className="block text-gray-600 hover:text-teal-600 transition-colors"
             >
               Features
-            </a>
-            <a
+            </Link>
+            <Link
               href="#how-it-works"
               className="block text-gray-600 hover:text-teal-600 transition-colors"
             >
               How It Works
-            </a>
-            <a
+            </Link>
+            <Link
               href="#pricing"
               className="block text-gray-600 hover:text-teal-600 transition-colors"
             >
               Pricing
-            </a>
+            </Link>
             <div className="flex flex-col space-y-2 pt-4">
               <Button
                 variant="outline"

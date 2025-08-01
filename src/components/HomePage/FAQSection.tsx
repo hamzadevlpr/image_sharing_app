@@ -11,7 +11,7 @@ const FAQSection = () => {
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -27,7 +27,7 @@ const FAQSection = () => {
           </div>
 
           {/* FAQ Accordion */}
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
                 <AccordionItem

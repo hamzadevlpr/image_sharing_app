@@ -9,7 +9,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default:
+          "bg-primary text-primary-foreground hover:bg-primary/90  text-lg px-8 py-6",
         primary:
           "bg-gradient-primary hover:from-teal-600 hover:to-teal-700 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300",
         destructive:
@@ -38,33 +39,32 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   href?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, href, ...props }, ref) => {
-    const combinedClass = cn(buttonVariants({ variant, size, className }))
+    const combinedClass = cn(buttonVariants({ variant, size, className }));
 
     if (href) {
       return (
-        <Link href={href} passHref className={combinedClass} {...(props as any)}>
+        <Link
+          href={href}
+          passHref
+          className={combinedClass}
+          {...(props as any)}
+        >
           {props.children}
         </Link>
-      )
+      );
     }
 
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? Slot : "button";
 
-    return (
-      <Comp
-        className={combinedClass}
-        ref={ref}
-        {...props}
-      />
-    );
+    return <Comp className={combinedClass} ref={ref} {...props} />;
   }
 );
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };

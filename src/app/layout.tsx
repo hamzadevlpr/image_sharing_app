@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import Script from "next/script";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -50,23 +50,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* 1) gtag.js loader */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-          strategy="afterInteractive"
-        />
-
-        {/* 2) gtag initialization */}
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){ dataLayer.push(arguments); }
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-          `}
-        </Script>
-      </head>
       <body className={`${poppins.className} antialiased`}>
         <div className="min-h-screen">
           <NextTopLoader color="#14b8a6" />
@@ -76,6 +59,7 @@ export default function RootLayout({
           </ClientAuth>
         </div>
       </body>
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || "GTM-TXFBDTTG"} />
     </html>
   );
 }

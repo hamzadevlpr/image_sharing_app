@@ -113,7 +113,7 @@ const TextShare = () => {
   const hasActions = Boolean(currentShareUrl);
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-16">
           <div className="w-20 h-20 bg-gradient-primary rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-cus">
             <TextIcon className="h-10 w-10 text-white" />

@@ -45,7 +45,7 @@ export default function page() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-xl shadow-cus p-8 lg:p-12">
             {/* Header Section */}
             <div className="flex items-center gap-4 mb-8">

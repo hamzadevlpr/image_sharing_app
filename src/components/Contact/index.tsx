@@ -47,7 +47,7 @@ const Contact = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
             <main className="pt-20 pb-16">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                     {/* Page Header */}
                     <div className="text-center mb-12">
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">

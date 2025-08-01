@@ -180,7 +180,7 @@ const ViewSharedText = () => {
   return (
     <section className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-coral-50">
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-6 text-center">
             <h1 className="text-2xl font-bold text-gray-900">Your Shared Text</h1>
           </div>
